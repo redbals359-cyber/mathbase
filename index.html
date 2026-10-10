@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MathQuest - Latihan Matematika</title>
+
+<style>
+:root {
+  --primary: #7657e8;
+  --light: #eee9ff;
+  --bg: #f7f7fc;
+  --text: #25243a;
+  --muted: #77768b;
+  --border: #e9e7f2;
+  --green: #1d9b69;
+  --red: #df515b;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+button { font: inherit; cursor: pointer; }
+
+.app { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 230px;
+  padding: 25px 16px;
+  background: white;
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.logo {
+  font-size: 23px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.logo-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 8px 0 30px;
+}
+
+.nav-btn {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  margin-bottom: 8px;
+  border: 0;
+  border-radius: 10px;
+  text-align: left;
+  background: transparent;
+  color: var(--muted);
+}
+
+.nav-btn.active,
+.nav-btn:hover {
+  background: var(--light);
+  color: var(--primary);
+}
+
+.sidebar-note {
+  margin-top: 30px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 28px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.topbar h1 { margin: 0; font-size: 25px; }
+.topbar p { color: var(--muted); font-size: 14px; }
+
+.xp-pill {
+  padding: 11px 15px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  white-space: nowrap;
+  font-weight: bold;
+}
+
+.page { display: none; }
+.page.active { display: block; }
+
+.card {
+  padding: 22px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin-bottom: 20px;
+}
+
+.hero {
+  padding: 30px;
+  color: white;
+  border-radius: 18px;
+  margin-bottom: 22px;
+  background: linear-gradient(120deg, #7657e8, #9d83fa);
+}
+
+.hero h2 { font-size: 27px; margin-top: 0; }
+.hero p { line-height: 1.7; }
+
+.primary-btn,
+.secondary-btn {
+  padding: 12px 16px;
+  border-radius: 10px;
+}
+
+.primary-btn {
+  color: white;
+  background: var(--primary);
+  border: none;
+  font-weight: bold;
+}
+
+.hero .primary-btn {
+  background: white;
+  color: var(--primary);
+}
+
+.secondary-btn {
+  background: white;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.stat {
+  padding: 18px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.stat-label { color: var(--muted); font-size: 13px; }
+.stat-value { font-size: 26px; font-weight: bold; margin-top: 8px; }
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.category {
+  padding: 18px;
+  text-align: left;
+  color: var(--text);
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.category:hover { border-color: var(--primary); }
+.category-icon { font-size: 27px; }
+.category h3 { margin: 12px 0 7px; }
+.category p { color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+.question-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 7px 10px;
+  color: var(--primary);
+  background: var(--light);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.progress-track {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #eeedf5;
+  margin: 15px 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--primary);
+  transition: width .25s;
+}
+
+.question-text {
+  font-size: 21px;
+  line-height: 1.6;
+  margin: 18px 0 22px;
+}
+
+.answers { display: grid; gap: 10px; }
+
+.answer-btn {
+  padding: 14px;
+  text-align: left;
+  color: var(--text);
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+}
+
+.answer-btn:hover:not(:disabled) { border-color: var(--primary); }
+.answer-btn.correct { background: #e9f8f0; border-color: var(--green); }
+.answer-btn.wrong { background: #fff0f1; border-color: var(--red); }
+.answer-btn:disabled { cursor: default; }
+
+.feedback {
+  display: none;
+  padding: 14px;
+  margin-top: 15px;
+  border-radius: 10px;
+  line-height: 1.6;
+}
+
+.feedback.show { display: block; }
+.feedback.good { color: #176e4c; background: #e9f8f0; }
+.feedback.bad { color: #a32c38; background: #fff0f1; }
+
+.question-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 17px;
+}
+
+/* KERTAS CORETAN BESAR */
+.scratchpad {
+  margin-top: 26px;
+  padding: 18px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.scratch-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.scratch-header h3 { margin: 0 0 6px; }
+.scratch-header p { color: var(--muted); font-size: 13px; margin: 0; }
+
+.scratch-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.tool-btn {
+  padding: 9px 11px;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: white;
+}
+
+.tool-btn.active {
+  color: var(--primary);
+  border-color: var(--primary);
+  background: var(--light);
+}
+
+.canvas-wrap {
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid #dcd8eb;
+  border-radius: 10px;
+  background-color: white;
+  background-image:
+    linear-gradient(#efedf7 1px, transparent 1px),
+    linear-gradient(90deg, #efedf7 1px, transparent 1px);
+  background-size: 25px 25px;
+}
+
+#scratch-canvas {
+  display: block;
+  width: 100%;
+  height: 500px;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.scratch-note {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 12px 0 0;
+}
+
+.review-item {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  line-height: 1.6;
+}
+
+.review-item:last-child { border-bottom: none; }
+.muted { color: var(--muted); }
+
+.recommendation {
+  padding: 15px;
+  color: #4e36a4;
+  background: var(--light);
+  border-radius: 11px;
+  line-height: 1.6;
+}
+
+@media (max-width: 760px) {
+  .app { display: block; }
+
+  .sidebar {
+    width: 100%;
+    padding: 14px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo { font-size: 21px; }
+  .logo-sub { margin-bottom: 13px; }
+
+  .nav-list {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+  }
+
+  .nav-btn {
+    width: auto;
+    white-space: nowrap;
+    margin: 0;
+    padding: 10px 12px;
+  }
+
+  .sidebar-note { display: none; }
+  .main { padding: 17px; }
+  .topbar h1 { font-size: 21px; }
+  .stats { gap: 8px; }
+  .stat { padding: 12px; }
+  .stat-value { font-size: 22px; }
+  .category-grid { grid-template-columns: 1fr; }
+  .hero { padding: 22px; }
+  .hero h2 { font-size: 23px; }
+  .card { padding: 16px; }
+  .question-text { font-size: 18px; }
+  .scratchpad { padding: 12px; }
+
+  /* KERTAS LEBIH BESAR DI HP */
+  #scratch-canvas {
+    height: 400px;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="logo">✦ MathQuest</div>
+    <div class="logo-sub">Belajar sedikit, berkembang setiap hari.</div>
+
+    <nav class="nav-list">
+      <button class="nav-btn active" data-page="home">⌂ Beranda</button>
+      <button class="nav-btn" data-page="practice">✎ Latihan</button>
+      <button class="nav-btn" data-page="evaluation">◎ Evaluasi</button>
+      <button class="nav-btn" data-page="progress">↗ Progres</button>
+    </nav>
+
+    <div class="sidebar-note">
+      Tumbuh melalui latihan.<br>
+      Kesalahan adalah bagian dari belajar.
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1 id="page-title">Beranda</h1>
+        <p id="page-subtitle">Mulai perjalanan matematika kamu.</p>
+      </div>
+      <div class="xp-pill">⭐ <span id="top-xp">0</span> XP</div>
+    </header>
+
+    <section class="page active" id="page-home">
+      <div class="hero">
+        <h2>Matematika, selangkah demi selangkah.</h2>
+        <p>Latih kemampuan berhitung, pahami kesalahan, dan selesaikan tantangan dengan caramu sendiri.</p>
+        <button class="primary-btn" onclick="startPractice()">Mulai latihan →</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">Total XP</div>
+          <div class="stat-value" id="home-xp">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Level</div>
+          <div class="stat-value" id="home-level">1</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Benar</div>
+          <div class="stat-value" id="home-correct">0</div>
+        </div>
+      </div>
+
+      <h2>Pilih materi</h2>
+      <div class="category-grid" id="home-categories"></div>
+    </section>
+
+    <section class="page" id="page-practice">
+      <div class="card" id="practice-container"></div>
+    </section>
+
+    <section class="page" id="page-evaluation">
+      <div class="card">
+        <h2>Evaluasi Kesalahan</h2>
+        <p class="muted">Pelajari jawaban yang keliru agar lebih memahami konsepnya.</p>
+        <div id="review-list"></div>
+      </div>
+      <div class="card">
+        <h2>Rekomendasi Belajar</h2>
+        <div id="recommendation" class="recommendation">
+          Kerjakan beberapa soal untuk mendapatkan rekomendasi.
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-progress">
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">Soal dijawab</div>
+          <div class="stat-value" id="progress-total">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Jawaban benar</div>
+          <div class="stat-value" id="progress-correct">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Akurasi</div>
+          <div class="stat-value" id="progress-accuracy">0%</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Perkembangan per materi</h2>
+        <div id="category-progress"></div>
+      </div>
+
+      <div class="card">
+        <h2>Tentang level</h2>
+        <p id="level-description"></p>
+        <div class="progress-track">
+          <div class="progress-fill" id="level-bar" style="width:0%"></div>
+        </div>
+        <p id="level-detail" class="muted"></p>
+      </div>
+
+      <button class="secondary-btn" onclick="resetSession()">Mulai ulang progres sesi</button>
+    </section>
+  </main>
+</div>
+
+<script>
+/* DATA MATERI */
+const categories = {
+  arithmetic: {
+    name: "Berhitung & Desimal",
+    icon: "🔢",
+    description: "Operasi dasar, pecahan, dan desimal."
+  },
+  percentage: {
+    name: "Persentase & Perbandingan",
+    icon: "📊",
+    description: "Persen, rasio, dan perbandingan."
+  },
+  logic: {
+    name: "Logika",
+    icon: "🧩",
+    description: "Pola angka dan hubungan logis."
+  },
+  problem: {
+    name: "Problem Solving",
+    icon: "💡",
+    description: "Matematika dalam kehidupan sehari-hari."
+  }
+};
+
+/* DATA SOAL */
+const questions = [
+  {
+    category: "arithmetic",
+    level: "Dasar",
+    question: "Berapakah hasil dari 125 + 275?",
+    answers: ["300", "350", "400", "450"],
+    correct: 2,
+    explanation: "125 + 275 = 400.",
+    hint: "125 + 200 = 325. Lalu tambahkan 75."
+  },
+  {
+    category: "arithmetic",
+    level: "Dasar",
+    question: "Berapakah hasil dari 15 × 6?",
+    answers: ["75", "80", "90", "95"],
+    correct: 2,
+    explanation: "15 × 6 = 90.",
+    hint: "Hitung (10 × 6) + (5 × 6)."
+  },
+  {
+    category: "arithmetic",
+    level: "Menengah",
+    question: "Berapakah hasil dari 3/4 + 1/4?",
+    answers: ["1/2", "1", "4/8", "3/8"],
+    correct: 1,
+    explanation: "3/4 + 1/4 = 4/4 = 1.",
+    hint: "Jika penyebut sama, jumlahkan pembilang."
+  },
+  {
+    category: "arithmetic",
+    level: "Menengah",
+    question: "Berapakah hasil dari 2,5 + 1,75?",
+    answers: ["3,25", "4,15", "4,25", "4,75"],
+    correct: 2,
+    explanation: "2,50 + 1,75 = 4,25.",
+    hint: "Sejajarkan koma: 2,50 + 1,75."
+  },
+  {
+    category: "percentage",
+    level: "Dasar",
+    question: "Berapakah 20% dari 150?",
+    answers: ["20", "25", "30", "35"],
+    correct: 2,
+    explanation: "20/100 × 150 = 30.",
+    hint: "10% dari 150 adalah 15."
+  },
+  {
+    category: "percentage",
+    level: "Dasar",
+    question: "Harga barang Rp80.000 mendapat diskon 25%. Berapa diskonnya?",
+    answers: ["Rp10.000", "Rp15.000", "Rp20.000", "Rp25.000"],
+    correct: 2,
+    explanation: "25% × Rp80.000 = Rp20.000.",
+    hint: "25% sama dengan seperempat."
+  },
+  {
+    category: "percentage",
+    level: "Menengah",
+    question: "Perbandingan laki-laki dan perempuan adalah 2 : 3. Jika jumlahnya 25 siswa, berapa siswa perempuan?",
+    answers: ["10", "12", "15", "18"],
+    correct: 2,
+    explanation: "Total bagian 5. Siswa perempuan = 3/5 × 25 = 15.",
+    hint: "Jumlahkan bagian, lalu hitung 3/5 dari 25."
+  },
+  {
+    category: "logic",
+    level: "Dasar",
+    question: "Pola angka 3, 6, 9, 12, ... Angka berikutnya?",
+    answers: ["13", "14", "15", "18"],
+    correct: 2,
+    explanation: "Setiap angka bertambah 3. Jadi jawabannya 15.",
+    hint: "Perhatikan selisih setiap angka."
+  },
+  {
+    category: "logic",
+    level: "Menengah",
+    question: "Pola angka 2, 4, 8, 16, ... Angka berikutnya?",
+    answers: ["20", "24", "30", "32"],
+    correct: 3,
+    explanation: "Setiap angka dikalikan 2. Jadi 16 × 2 = 32.",
+    hint: "Cari hubungan perkalian antarangka."
+  },
+  {
+    category: "logic",
+    level: "Menengah",
+    question: "Jika semua A adalah B dan semua B adalah C, maka ...",
+    answers: [
+      "Semua C adalah A",
+      "Semua A adalah C",
+      "Semua B adalah A",
+      "A tidak berhubungan dengan C"
+    ],
+    correct: 1,
+    explanation: "Jika A termasuk B dan B termasuk C, A juga termasuk C.",
+    hint: "Bayangkan A berada di dalam B, dan B di dalam C."
+  },
+  {
+    category: "problem",
+    level: "Menengah",
+    question: "Rani memiliki Rp50.000. Ia membeli buku Rp18.000 dan pulpen Rp7.000. Berapa sisanya?",
+    answers: ["Rp20.000", "Rp25.000", "Rp27.000", "Rp32.000"],
+    correct: 1,
+    explanation: "Belanja 25.000. Sisa uang = 50.000 − 25.000 = 25.000.",
+    hint: "Jumlahkan belanja terlebih dahulu."
+  },
+  {
+    category: "problem",
+    level: "Menengah",
+    question: "Kendaraan menempuh 120 km dalam 3 jam. Berapa kecepatan rata-ratanya?",
+    answers: ["30 km/jam", "35 km/jam", "40 km/jam", "45 km/jam"],
+    correct: 2,
+    explanation: "Kecepatan = jarak ÷ waktu = 120 ÷ 3 = 40 km/jam.",
+    hint: "Gunakan rumus kecepatan = jarak ÷ waktu."
+  }
+];
+
+/* STATUS SESI */
+let currentCategory = "arithmetic";
+let currentQuestion = 0;
+let selectedQuestions = [];
+let answered = false;
+let showingHint = false;
+
+let xp = 0;
+let correctCount = 0;
+let answeredCount = 0;
+let mistakes = [];
+
+let categoryStats = {};
+Object.keys(categories).forEach(key => {
+  categoryStats[key] = { answered: 0, correct: 0 };
+});
+
+/* NAVIGASI */
+document.querySelectorAll(".nav-btn").forEach(button => {
+  button.addEventListener("click", () => showPage(button.dataset.page));
+});
+
+function showPage(page) {
+  document.querySelectorAll(".page").forEach(el => el.classList.remove("active"));
+  document.getElementById("page-" + page).classList.add("active");
+
+  document.querySelectorAll(".nav-btn").forEach(button => {
+    button.classList.toggle("active", button.dataset.page === page);
+  });
+
+  const titles = {
+    home: ["Beranda", "Mulai perjalanan matematika kamu."],
+    practice: ["Latihan", "Kerjakan soal dan pahami prosesnya."],
+    evaluation: ["Evaluasi", "Belajar dari kesalahan."],
+    progress: ["Progres", "Pantau perkembangan sesi ini."]
+  };
+
+  document.getElementById("page-title").textContent = titles[page][0];
+  document.getElementById("page-subtitle").textContent = titles[page][1];
+
+  if (page === "home") renderHome();
+  if (page === "evaluation") renderEvaluation();
+  if (page === "progress") renderProgress();
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* BERANDA */
+function renderHome() {
+  document.getElementById("top-xp").textContent = xp;
+  document.getElementById("home-xp").textContent = xp;
+  document.getElementById("home-level").textContent = Math.floor(xp / 100) + 1;
+  document.getElementById("home-correct").textContent = correctCount;
+
+  const container = document.getElementById("home-categories");
+  container.innerHTML = "";
+
+  Object.entries(categories).forEach(([key, category]) => {
+    const stats = categoryStats[key];
+    const button = document.createElement("button");
+    button.className = "category";
+
+    button.innerHTML = `
+      <div class="category-icon">${category.icon}</div>
+      <h3>${category.name}</h3>
+      <p>${category.description}</p>
+      <p><strong>${stats.correct}/${stats.answered}</strong> jawaban benar</p>
+    `;
+
+    button.addEventListener("click", () => startPractice(key));
+    container.appendChild(button);
+  });
+}
+
+function startPractice(categoryKey) {
+  currentCategory = categoryKey || "arithmetic";
+
+  selectedQuestions = questions.filter(
+    question => question.category === currentCategory
+  );
+
+  currentQuestion = 0;
+  showPage("practice");
+  renderQuestion();
+}
+
+/* MENAMPILKAN SOAL */
+function renderQuestion() {
+  const container = document.getElementById("practice-container");
+  const question = selectedQuestions[currentQuestion];
+
+  if (!question) {
+    container.innerHTML = `
+      <h2>🎉 Latihan selesai!</h2>
+      <p>Kamu sudah menyelesaikan semua soal materi ini.</p>
+      <p>Total XP: <strong>${xp}</strong></p>
+      <button class="primary-btn" onclick="showPage('evaluation')">Lihat evaluasi</button>
+      <button class="secondary-btn" onclick="showPage('home')">Kembali ke beranda</button>
+    `;
+    return;
+  }
+
+  answered = false;
+  showingHint = false;
+
+  container.innerHTML = `
+    <div class="question-top">
+      <span class="tag">${categories[question.category].name}</span>
+      <span class="muted">Soal ${currentQuestion + 1} dari ${selectedQuestions.length}</span>
+    </div>
+
+    <div class="progress-track">
+      <div class="progress-fill"
+        style="width:${(currentQuestion + 1) / selectedQuestions.length * 100}%"></div>
+    </div>
+
+    <span class="tag">Tingkat: ${question.level}</span>
+    <div class="question-text">${question.question}</div>
+
+    <div class="answers">
+      ${question.answers.map((answer, index) => `
+        <button class="answer-btn" data-index="${index}">
+          ${String.fromCharCode(65 + index)}. ${answer}
+        </button>
+      `).join("")}
+    </div>
+
+    <div id="feedback" class="feedback" aria-live="polite"></div>
+
+    <div class="question-actions">
+      <button class="secondary-btn" id="hint-btn">💡 Petunjuk</button>
+      <button class="primary-btn" id="next-btn" style="display:none">Soal berikutnya →</button>
+    </div>
+
+    <div id="hint-box" class="feedback"></div>
+
+    <div class="scratchpad">
+      <div class="scratch-header">
+        <div>
+          <h3>✍️ Kertas Coretan Besar</h3>
+          <p>Gunakan jari untuk menulis rumus dan menghitung.</p>
+        </div>
+
+        <div class="scratch-tools">
+          <button class="tool-btn active" id="pen-btn">✏️ Pena</button>
+          <button class="tool-btn" id="eraser-btn">🧽 Penghapus</button>
+          <button class="tool-btn" id="undo-btn">↩ Undo</button>
+          <button class="tool-btn" id="clear-btn">🗑 Bersihkan</button>
+        </div>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="scratch-canvas"></canvas>
+      </div>
+
+      <p class="scratch-note">
+        Kertas berukuran besar. Coretan akan dihapus ketika berpindah soal.
+      </p>
+    </div>
+  `;
+
+  container.querySelectorAll(".answer-btn").forEach(button => {
+    button.addEventListener("click", () => checkAnswer(Number(button.dataset.index)));
+  });
+
+  document.getElementById("hint-btn").addEventListener("click", showHint);
+
+  document.getElementById("next-btn").addEventListener("click", () => {
+    currentQuestion++;
+    renderQuestion();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  initScratchpad();
+}
+
+/* JAWABAN */
+function checkAnswer(index) {
+  if (answered) return;
+  answered = true;
+
+  const question = selectedQuestions[currentQuestion];
+  const isCorrect = index === question.correct;
+
+  answeredCount++;
+  categoryStats[question.category].answered++;
+
+  document.querySelectorAll(".answer-btn").forEach((button, i) => {
+    button.disabled = true;
+    if (i === question.correct) button.classList.add("correct");
+    else if (i === index) button.classList.add("wrong");
+  });
+
+  const feedback = document.getElementById("feedback");
+  feedback.classList.add("show");
+
+  if (isCorrect) {
+    correctCount++;
+    xp += 10;
+    categoryStats[question.category].correct++;
+
+    feedback.classList.add("good");
+    feedback.innerHTML = `<strong>Benar! +10 XP 🎉</strong><br>${question.explanation}`;
+  } else {
+    feedback.classList.add("bad");
+    feedback.innerHTML = `
+      <strong>Belum tepat.</strong><br>
+      Jawaban benar: ${question.answers[question.correct]}.<br>
+      ${question.explanation}
+    `;
+
+    mistakes.push({
+      question: question.question,
+      category: question.category,
+      chosen: question.answers[index],
+      correct: question.answers[question.correct],
+      explanation: question.explanation
+    });
+  }
+
+  document.getElementById("next-btn").style.display = "inline-block";
+  renderHome();
+}
+
+function showHint() {
+  if (showingHint) return;
+  showingHint = true;
+
+  const question = selectedQuestions[currentQuestion];
+  const box = document.getElementById("hint-box");
+
+  box.className = "feedback show";
+  box.textContent = "💡 Petunjuk: " + question.hint;
+}
+
+/* EVALUASI */
+function renderEvaluation() {
+  const list = document.getElementById("review-list");
+
+  if (!mistakes.length) {
+    list.innerHTML = `<p class="muted">Belum ada kesalahan yang tercatat. Kerjakan soal untuk memulai evaluasi.</p>`;
+  } else {
+    list.innerHTML = mistakes.map((item, index) => `
+      <div class="review-item">
+        <strong>${index + 1}. ${item.question}</strong>
+        <p>Materi: ${categories[item.category].name}</p>
+        <p>Jawabanmu: <span style="color:var(--red)">${item.chosen}</span></p>
+        <p>Jawaban benar: <strong>${item.correct}</strong></p>
+        <p>${item.explanation}</p>
+      </div>
+    `).join("");
+  }
+
+  const weakest = Object.entries(categoryStats)
+    .filter(([, stats]) => stats.answered > 0)
+    .sort((a, b) =>
+      a[1].correct / a[1].answered - b[1].correct / b[1].answered
+    );
+
+  const recommendation = document.getElementById("recommendation");
+
+  if (!weakest.length) {
+    recommendation.textContent = "Kerjakan beberapa soal untuk mendapatkan rekomendasi.";
+  } else {
+    const [key, stats] = weakest[0];
+    const accuracy = Math.round(stats.correct / stats.answered * 100);
+
+    recommendation.innerHTML = `
+      <strong>Fokus latihan: ${categories[key].name}</strong><br>
+      Akurasi kamu ${accuracy}%. Pelajari konsep dasarnya dan coba soal serupa.
+    `;
+  }
+}
+
+/* PROGRES */
+function renderProgress() {
+  document.getElementById("progress-total").textContent = answeredCount;
+  document.getElementById("progress-correct").textContent = correctCount;
+
+  const accuracy = answeredCount
+    ? Math.round(correctCount / answeredCount * 100)
+    : 0;
+
+  document.getElementById("progress-accuracy").textContent = accuracy + "%";
+
+  document.getElementById("category-progress").innerHTML =
+    Object.entries(categories).map(([key, category]) => {
+      const stats = categoryStats[key];
+      const percent = stats.answered
+        ? Math.round(stats.correct / stats.answered * 100)
+        : 0;
+
+      return `
+        <div style="margin-bottom:20px">
+          <strong>${category.icon} ${category.name}</strong>
+          <p class="muted">${stats.correct} benar dari ${stats.answered} soal</p>
+          <div class="progress-track">
+            <div class="progress-fill" style="width:${percent}%"></div>
+          </div>
+          <small>${percent}% akurasi</small>
+        </div>
+      `;
+    }).join("");
+
+  const level = Math.floor(xp / 100) + 1;
+  const remainingXP = xp % 100;
+
+  document.getElementById("level-description").textContent =
+    "Level " + level + ". Terus berlatih untuk mencapai level berikutnya.";
+
+  document.getElementById("level-detail").textContent =
+    remainingXP + " dari 100 XP menuju level berikutnya.";
+
+  document.getElementById("level-bar").style.width = remainingXP + "%";
+}
+
+function resetSession() {
+  if (!confirm("Yakin ingin menghapus progres sesi ini?")) return;
+
+  xp = 0;
+  correctCount = 0;
+  answeredCount = 0;
+  mistakes = [];
+
+  Object.keys(categories).forEach(key => {
+    categoryStats[key] = { answered: 0, correct: 0 };
+  });
+
+  renderHome();
+  renderProgress();
+  renderEvaluation();
+  showPage("home");
+}
+
+/* KERTAS CORETAN DIGITAL */
+let scratchCanvas = null;
+let scratchCtx = null;
+let drawing = false;
+let scratchTool = "pen";
+let lastX = 0;
+let lastY = 0;
+let scratchHistory = [];
+
+function initScratchpad() {
+  scratchCanvas = document.getElementById("scratch-canvas");
+  if (!scratchCanvas) return;
+
+  scratchCtx = scratchCanvas.getContext("2d");
+
+  const rect = scratchCanvas.getBoundingClientRect();
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+
+  scratchCanvas.width = Math.round(rect.width * dpr);
+  scratchCanvas.height = Math.round(rect.height * dpr);
+
+  scratchCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  scratchCtx.lineCap = "round";
+  scratchCtx.lineJoin = "round";
+  scratchCtx.lineWidth = 3;
+  scratchCtx.strokeStyle = "#29243b";
+
+  scratchHistory = [];
+  saveScratchSnapshot();
+
+  scratchCanvas.addEventListener("pointerdown", startDrawing);
+  scratchCanvas.addEventListener("pointermove", draw);
+  scratchCanvas.addEventListener("pointerup", stopDrawing);
+  scratchCanvas.addEventListener("pointercancel", stopDrawing);
+  scratchCanvas.addEventListener("lostpointercapture", stopDrawing);
+
+  document.getElementById("pen-btn").addEventListener("click", () => setScratchTool("pen"));
+  document.getElementById("eraser-btn").addEventListener("click", () => setScratchTool("eraser"));
+  document.getElementById("undo-btn").addEventListener("click", undoScratch);
+  document.getElementById("clear-btn").addEventListener("click", clearScratch);
+}
+
+function startDrawing(event) {
+  if (!scratchCanvas || !scratchCtx) return;
+
+  drawing = true;
+  scratchCanvas.setPointerCapture(event.pointerId);
+
+  const rect = scratchCanvas.getBoundingClientRect();
+  lastX = event.clientX - rect.left;
+  lastY = event.clientY - rect.top;
+
+  scratchCtx.beginPath();
+  scratchCtx.moveTo(lastX, lastY);
+  scratchCtx.lineWidth = scratchTool === "eraser" ? 22 : 3;
+  scratchCtx.strokeStyle = scratchTool === "eraser" ? "#ffffff" : "#29243b";
+
+  event.preventDefault();
+}
+
+function draw(event) {
+  if (!drawing || !scratchCanvas || !scratchCtx) return;
+
+  const rect = scratchCanvas.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+
+  scratchCtx.beginPath();
+  scratchCtx.moveTo(lastX, lastY);
+  scratchCtx.lineTo(x, y);
+  scratchCtx.stroke();
+
+  lastX = x;
+  lastY = y;
+
+  event.preventDefault();
+}
+
+function stopDrawing() {
+  if (!drawing) return;
+
+  drawing = false;
+  if (scratchCtx) {
+    scratchCtx.beginPath();
+    saveScratchSnapshot();
+  }
+}
+
+function setScratchTool(tool) {
+  scratchTool = tool;
+
+  document.getElementById("pen-btn").classList.toggle("active", tool === "pen");
+  document.getElementById("eraser-btn").classList.toggle("active", tool === "eraser");
+}
+
+function saveScratchSnapshot() {
+  if (!scratchCanvas || !scratchCtx) return;
+
+  scratchHistory.push(
+    scratchCtx.getImageData(0, 0, scratchCanvas.width, scratchCanvas.height)
+  );
+
+  if (scratchHistory.length > 30) scratchHistory.shift();
+}
+
+function undoScratch() {
+  if (!scratchCtx || scratchHistory.length <= 1) {
+    clearScratch();
+    return;
+  }
+
+  scratchHistory.pop();
+  scratchCtx.putImageData(scratchHistory[scratchHistory.length - 1], 0, 0);
+}
+
+function clearScratch() {
+  if (!scratchCanvas || !scratchCtx) return;
+
+  scratchCtx.clearRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+  scratchHistory = [];
+  saveScratchSnapshot();
+}
+
+/* JALANKAN APLIKASI */
+renderHome();
+renderProgress();
+renderEvaluation();
+</script>
+</body>
+</html>
