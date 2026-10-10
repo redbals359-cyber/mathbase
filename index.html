@@ -1,0 +1,2130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MathQuest — Belajar Matematika</title>
+
+<style>
+:root {
+  --purple: #7257e8;
+  --purple-dark: #5940c7;
+  --purple-light: #f0edff;
+  --bg: #f7f7fc;
+  --white: #ffffff;
+  --text: #25243a;
+  --muted: #88879b;
+  --border: #e9e7f3;
+  --green: #25a878;
+  --red: #e65e70;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+button, input, select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  transition: .2s;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid #c7bcff;
+  outline-offset: 2px;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+  width: 230px;
+  padding: 26px 16px;
+  background: white;
+  border-right: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 21px;
+  font-weight: 800;
+  margin: 0 0 34px 8px;
+}
+
+.brand-icon {
+  background: var(--purple);
+  color: white;
+  padding: 9px;
+  border-radius: 12px;
+}
+
+.nav-label {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: bold;
+  margin: 20px 10px 10px;
+  letter-spacing: 1px;
+}
+
+.nav-btn {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: #77758d;
+  text-align: left;
+  padding: 13px 12px;
+  margin-bottom: 5px;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+  background: var(--purple-light);
+  color: var(--purple);
+  font-weight: bold;
+}
+
+.sidebar-note {
+  margin-top: 35px;
+  padding: 15px;
+  border-radius: 14px;
+  background: #f8f6ff;
+  color: #77718e;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* MAIN */
+
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 28px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.topbar h1 {
+  font-size: 25px;
+  margin: 0;
+}
+
+.topbar p {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 7px 0 0;
+}
+
+.level-badge {
+  background: white;
+  border: 1px solid var(--border);
+  padding: 11px 15px;
+  border-radius: 13px;
+  font-size: 13px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+.card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 22px;
+  margin-bottom: 20px;
+}
+
+.card h2, .card h3 {
+  margin-top: 0;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  padding: 20px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.stat-card .number {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 10px 0 5px;
+}
+
+.stat-card .label {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* MUSIC PLAYER */
+
+.music-card {
+  background: linear-gradient(135deg, #f1edff, #fff);
+  border: 1px solid #ded6ff;
+  border-radius: 18px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.music-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.music-heading h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.music-info {
+  min-width: 0;
+  margin-bottom: 15px;
+}
+
+.track-title {
+  font-size: 17px;
+  font-weight: bold;
+  overflow-wrap: anywhere;
+}
+
+.track-artist {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+.track-select {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.music-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.music-progress input {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--purple);
+}
+
+.music-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.music-btn {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: white;
+  padding: 10px 13px;
+  color: var(--text);
+}
+
+.music-btn:hover {
+  background: var(--purple-light);
+}
+
+.music-btn.primary {
+  background: var(--purple);
+  color: white;
+  border-color: var(--purple);
+  font-weight: bold;
+}
+
+.music-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.music-options select {
+  padding: 8px;
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 8px;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.volume-control input {
+  width: 90px;
+  accent-color: var(--purple);
+}
+
+.music-status {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* HOME */
+
+.hero {
+  padding: 30px;
+  border-radius: 20px;
+  background: linear-gradient(120deg, #7257e8, #9885f5);
+  color: white;
+  margin-bottom: 22px;
+}
+
+.hero h2 {
+  margin: 0 0 10px;
+  font-size: 26px;
+}
+
+.hero p {
+  max-width: 560px;
+  font-size: 14px;
+  line-height: 1.7;
+  opacity: .9;
+}
+
+.btn {
+  border: none;
+  padding: 12px 17px;
+  border-radius: 11px;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.btn-primary {
+  background: var(--purple);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--purple-dark);
+}
+
+.btn-white {
+  background: white;
+  color: var(--purple);
+}
+
+.btn-outline {
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--text);
+}
+
+.btn-danger {
+  background: #fff0f2;
+  color: var(--red);
+}
+
+.category-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  background: white;
+}
+
+.category-icon {
+  font-size: 25px;
+  margin-bottom: 12px;
+}
+
+.category-card h3 {
+  margin: 0 0 8px;
+}
+
+.category-card p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  min-height: 38px;
+}
+
+.category-card .btn {
+  width: 100%;
+}
+
+/* QUIZ */
+
+.quiz-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+}
+
+.quiz-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.pill {
+  display: inline-block;
+  border-radius: 20px;
+  padding: 7px 11px;
+  background: var(--purple-light);
+  color: var(--purple);
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.question {
+  font-size: 22px;
+  line-height: 1.55;
+  font-weight: bold;
+  margin: 22px 0;
+  overflow-wrap: anywhere;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.option-btn {
+  border: 1px solid var(--border);
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  text-align: left;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.option-btn:hover:not(:disabled) {
+  border-color: var(--purple);
+  background: #faf9ff;
+}
+
+.option-btn.correct {
+  border-color: var(--green);
+  background: #eafaf3;
+  color: #137d57;
+}
+
+.option-btn.wrong {
+  border-color: var(--red);
+  background: #fff0f2;
+  color: #b52d43;
+}
+
+.option-btn:disabled {
+  cursor: default;
+}
+
+.feedback {
+  display: none;
+  border-radius: 12px;
+  padding: 15px;
+  margin-top: 18px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.feedback.show {
+  display: block;
+}
+
+.feedback.good {
+  background: #eafaf3;
+  color: #137d57;
+}
+
+.feedback.bad {
+  background: #fff0f2;
+  color: #b52d43;
+}
+
+.quiz-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+/* SCRATCHPAD — BESAR */
+
+.scratch-card {
+  padding: 20px;
+}
+
+.scratch-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.scratch-header h3 {
+  margin: 0;
+}
+
+.scratch-tools {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.tool-btn {
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 9px;
+  padding: 9px 12px;
+  font-size: 12px;
+}
+
+.tool-btn.active {
+  border-color: var(--purple);
+  background: var(--purple-light);
+  color: var(--purple);
+  font-weight: bold;
+}
+
+.color-picker {
+  width: 36px;
+  height: 36px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 9px;
+}
+
+.scratch-wrap {
+  width: 100%;
+  height: 600px;
+  min-height: 600px;
+  border: 2px solid #e6e0ff;
+  border-radius: 14px;
+  overflow: hidden;
+  background-color: white;
+  background-image:
+    linear-gradient(#eeeafd 1px, transparent 1px),
+    linear-gradient(90deg, #eeeafd 1px, transparent 1px);
+  background-size: 25px 25px;
+  position: relative;
+}
+
+#scratchCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.scratch-note {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 10px;
+  line-height: 1.6;
+}
+
+/* PROGRESS */
+
+.progress-row {
+  margin: 20px 0;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+  margin-bottom: 9px;
+}
+
+.progress-bar {
+  height: 10px;
+  background: #eeedf5;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #7257e8, #a394ff);
+  border-radius: 20px;
+  transition: width .3s;
+}
+
+.empty-state {
+  padding: 28px;
+  text-align: center;
+  color: var(--muted);
+  background: white;
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.review-item {
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 16px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.review-item h4 {
+  margin: 0 0 8px;
+}
+
+.review-item .answer-wrong {
+  color: var(--red);
+}
+
+.review-item .answer-right {
+  color: var(--green);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+  .sidebar {
+    width: 190px;
+    padding: 20px 10px;
+  }
+
+  .main {
+    padding: 20px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .app {
+    display: block;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 12px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .brand {
+    margin: 0 5px 12px;
+    font-size: 18px;
+  }
+
+  .nav-label,
+  .sidebar-note {
+    display: none;
+  }
+
+  .sidebar nav {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .nav-btn {
+    text-align: center;
+    padding: 11px 3px;
+    font-size: 11px;
+    margin: 0;
+  }
+
+  .main {
+    padding: 15px;
+  }
+
+  .topbar h1 {
+    font-size: 21px;
+  }
+
+  .topbar p {
+    font-size: 12px;
+  }
+
+  .level-badge {
+    padding: 9px;
+    font-size: 11px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .stat-card .number {
+    font-size: 24px;
+  }
+
+  .hero {
+    padding: 22px;
+  }
+
+  .hero h2 {
+    font-size: 22px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .question {
+    font-size: 19px;
+  }
+
+  .options {
+    grid-template-columns: 1fr;
+  }
+
+  .scratch-card {
+    padding: 12px;
+  }
+
+  .scratch-wrap {
+    height: 600px;
+    min-height: 600px;
+  }
+
+  .scratch-tools {
+    gap: 6px;
+  }
+
+  .tool-btn {
+    padding: 9px;
+    font-size: 11px;
+  }
+
+  .music-controls {
+    gap: 7px;
+  }
+
+  .music-btn {
+    padding: 10px;
+  }
+
+  .music-options {
+    align-items: flex-start;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-icon">∑</span>
+      <span>MathQuest</span>
+    </div>
+
+    <div class="nav-label">MENU UTAMA</div>
+
+    <nav>
+      <button class="nav-btn active" data-page="home">🏠 Beranda</button>
+      <button class="nav-btn" data-page="practice">🧮 Latihan</button>
+      <button class="nav-btn" data-page="evaluation">📝 Evaluasi</button>
+      <button class="nav-btn" data-page="progress">📈 Progres</button>
+    </nav>
+
+    <div class="sidebar-note">
+      💡 Belajar sedikit demi sedikit setiap hari. Kesalahan adalah bagian dari proses belajar.
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <header class="topbar">
+      <div>
+        <h1 id="pageTitle">Beranda</h1>
+        <p>Belajar matematika, satu soal setiap langkah.</p>
+      </div>
+      <div class="level-badge">
+        ⭐ Level <span id="levelTop">1</span>
+        · <span id="xpTop">0</span> XP
+      </div>
+    </header>
+
+    <!-- MUSIC PLAYER -->
+
+    <section class="music-card">
+      <div class="music-heading">
+        <h3>🎵 Music Player</h3>
+        <span class="pill">Study Music</span>
+      </div>
+
+      <div class="music-info">
+        <div class="track-title" id="trackTitle">All Too Well (Taylor's Version)</div>
+        <div class="track-artist" id="trackArtist">Taylor Swift</div>
+      </div>
+
+      <select id="trackSelect" class="track-select" aria-label="Pilih lagu">
+        <option value="0">1. All Too Well — Taylor Swift</option>
+        <option value="1">2. Ini Abadi — Perunggu</option>
+        <option value="2">3. Pelangi — Hivi!</option>
+        <option value="3">4. Rasakan Nikmatnya Hidup — Hindia</option>
+        <option value="4">5. You're On Your Own, Kid — Taylor Swift</option>
+      </select>
+
+      <audio id="audioPlayer" preload="metadata"></audio>
+
+      <div class="music-progress">
+        <span id="currentTime">0:00</span>
+        <input id="seekBar" type="range" min="0" max="100" value="0"
+               aria-label="Posisi lagu">
+        <span id="duration">0:00</span>
+      </div>
+
+      <div class="music-controls">
+        <button class="music-btn" id="shuffleBtn" title="Acak lagu">🔀</button>
+        <button class="music-btn" id="prevBtn" title="Lagu sebelumnya">⏮</button>
+        <button class="music-btn primary" id="playBtn">▶ Putar</button>
+        <button class="music-btn" id="nextBtn" title="Lagu berikutnya">⏭</button>
+        <button class="music-btn" id="repeatBtn" title="Mode pengulangan">🔁 Semua</button>
+      </div>
+
+      <div class="music-options">
+        <div class="volume-control">
+          <span>🔊 Volume</span>
+          <input id="volumeBar" type="range" min="0" max="1" step="0.05" value="0.5">
+        </div>
+
+        <label>
+          Pengulangan:
+          <select id="repeatSelect">
+            <option value="all">Semua lagu</option>
+            <option value="one">Satu lagu</option>
+            <option value="off">Tidak mengulang</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="music-status" id="musicStatus">
+        Tekan Putar untuk mulai mendengarkan. Jika lagu tidak tersedia, periksa akses file MP3 di GitHub.
+      </div>
+    </section>
+
+    <!-- HOME -->
+
+    <section class="page active" id="home">
+      <div class="hero">
+        <h2>Selamat datang di MathQuest! 👋</h2>
+        <p>
+          Asah kemampuan berhitung, persentase, logika, dan pemecahan masalah.
+          Kerjakan soal, coret perhitunganmu, lalu pelajari kesalahanmu.
+        </p>
+        <button class="btn btn-white" id="startBtn">Mulai Belajar →</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div>⭐</div>
+          <div class="number" id="homeXP">0</div>
+          <div class="label">Total XP</div>
+        </div>
+
+        <div class="stat-card">
+          <div>✅</div>
+          <div class="number" id="homeCorrect">0</div>
+          <div class="label">Jawaban benar</div>
+        </div>
+
+        <div class="stat-card">
+          <div>📚</div>
+          <div class="number" id="homeAnswered">0</div>
+          <div class="label">Soal dijawab</div>
+        </div>
+      </div>
+
+      <h2>📚 Pilih kategori</h2>
+
+      <div class="grid">
+        <div class="category-card">
+          <div class="category-icon">🔢</div>
+          <h3>Berhitung & Desimal</h3>
+          <p>Latihan operasi hitung, pecahan desimal, dan bilangan.</p>
+          <button class="btn btn-primary category-start" data-category="Berhitung & Desimal">Mulai latihan</button>
+        </div>
+
+        <div class="category-card">
+          <div class="category-icon">📊</div>
+          <h3>Persentase & Perbandingan</h3>
+          <p>Pelajari persen, diskon, dan rasio dengan soal acak.</p>
+          <button class="btn btn-primary category-start" data-category="Persentase & Perbandingan">Mulai latihan</button>
+        </div>
+
+        <div class="category-card">
+          <div class="category-icon">🧠</div>
+          <h3>Logika</h3>
+          <p>Temukan pola bilangan dan latih penalaran logis.</p>
+          <button class="btn btn-primary category-start" data-category="Logika">Mulai latihan</button>
+        </div>
+
+        <div class="category-card">
+          <div class="category-icon">💡</div>
+          <h3>Problem Solving</h3>
+          <p>Selesaikan persoalan sederhana dalam kehidupan sehari-hari.</p>
+          <button class="btn btn-primary category-start" data-category="Problem Solving">Mulai latihan</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRACTICE -->
+
+    <section class="page" id="practice">
+      <div class="card">
+        <div class="quiz-meta">
+          <span class="pill" id="categoryLabel">Berhitung & Desimal</span>
+          <span class="pill">Tingkat <span id="difficultyLabel">1</span></span>
+          <span class="muted">Soal ke-<span id="questionNumber">1</span></span>
+        </div>
+
+        <label for="categorySelect" class="muted">Pilih kategori latihan</label>
+        <select id="categorySelect" class="track-select" style="margin-top:8px">
+          <option>Berhitung & Desimal</option>
+          <option>Persentase & Perbandingan</option>
+          <option>Logika</option>
+          <option>Problem Solving</option>
+        </select>
+
+        <div class="question" id="questionText">
+          Tekan tombol soal baru untuk memulai.
+        </div>
+
+        <div class="options" id="answerOptions"></div>
+
+        <div class="feedback" id="feedback"></div>
+
+        <div class="quiz-actions">
+          <button class="btn btn-primary" id="newQuestionBtn">Soal Baru</button>
+          <button class="btn btn-outline" id="hintBtn">💡 Petunjuk</button>
+          <button class="btn btn-outline" id="explanationBtn">📖 Pembahasan</button>
+        </div>
+
+        <div class="feedback" id="hintBox"></div>
+        <div class="feedback" id="explanationBox"></div>
+      </div>
+
+      <div class="card scratch-card">
+        <div class="scratch-header">
+          <h3>✏️ Papan Coret</h3>
+          <span class="muted">Area perhitungan bebas</span>
+        </div>
+
+        <div class="scratch-tools">
+          <button class="tool-btn active" id="penBtn">✏️ Pena</button>
+          <button class="tool-btn" id="eraserBtn">🧽 Penghapus</button>
+          <button class="tool-btn" id="undoBtn">↩ Undo</button>
+          <button class="tool-btn" id="clearBtn">🗑 Hapus semua</button>
+
+          <label title="Warna pena">
+            <input class="color-picker" id="penColor" type="color" value="#332d55">
+          </label>
+
+          <label title="Ukuran pena">
+            <select class="tool-btn" id="penSize">
+              <option value="2">Tipis</option>
+              <option value="4" selected>Sedang</option>
+              <option value="7">Tebal</option>
+              <option value="11">Sangat tebal</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="scratch-wrap" id="scratchWrap">
+          <canvas id="scratchCanvas"></canvas>
+        </div>
+
+        <div class="scratch-note">
+          Papan coret berukuran 600 px. Gunakan jari di HP atau mouse di laptop
+          untuk menulis perhitungan. Isi papan coret tidak disimpan setelah halaman dimuat ulang.
+        </div>
+      </div>
+    </section>
+
+    <!-- EVALUATION -->
+
+    <section class="page" id="evaluation">
+      <div class="card">
+        <h2>📝 Evaluasi Belajar</h2>
+        <p class="muted">
+          Jawaban salah akan dicatat agar kamu bisa mempelajari kembali konsep yang belum dikuasai.
+        </p>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="number" id="evalAnswered">0</div>
+            <div class="label">Total dijawab</div>
+          </div>
+          <div class="stat-card">
+            <div class="number" id="evalCorrect">0</div>
+            <div class="label">Benar</div>
+          </div>
+          <div class="stat-card">
+            <div class="number" id="evalAccuracy">0%</div>
+            <div class="label">Akurasi</div>
+          </div>
+        </div>
+
+        <h3>🎯 Rekomendasi</h3>
+        <div id="recommendation" class="empty-state">
+          Kerjakan beberapa soal terlebih dahulu agar rekomendasi belajarmu bisa ditampilkan.
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>🔍 Riwayat jawaban salah</h3>
+        <div id="wrongAnswers">
+          <div class="empty-state">Belum ada jawaban salah. Terus berlatih!</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROGRESS -->
+
+    <section class="page" id="progress">
+      <div class="card">
+        <h2>📈 Progres Belajar</h2>
+        <p class="muted">Pantau hasil latihanmu berdasarkan kategori.</p>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="number" id="progressXP">0</div>
+            <div class="label">Total XP</div>
+          </div>
+          <div class="stat-card">
+            <div class="number" id="progressLevel">1</div>
+            <div class="label">Level</div>
+          </div>
+          <div class="stat-card">
+            <div class="number" id="progressAccuracy">0%</div>
+            <div class="label">Akurasi</div>
+          </div>
+        </div>
+
+        <h3>Hasil per kategori</h3>
+        <div id="categoryProgress"></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+/* =========================
+   MUSIC PLAYER
+========================= */
+
+const tracks = [
+  {
+    title: "All Too Well (Taylor's Version)",
+    artist: "Taylor Swift",
+    src: "https://raw.githubusercontent.com/redbals359-cyber/mathbase/main/SpotiDownloader.com%20-%20All%20Too%20Well%20(Taylor%27s%20Version)%20-%20Taylor%20Swift.mp3"
+  },
+  {
+    title: "Ini Abadi",
+    artist: "Perunggu",
+    src: "https://raw.githubusercontent.com/redbals359-cyber/mathbase/main/SpotiDownloader.com%20-%20Ini%20Abadi%20-%20Perunggu.mp3"
+  },
+  {
+    title: "Pelangi",
+    artist: "Hivi!",
+    src: "https://raw.githubusercontent.com/redbals359-cyber/mathbase/main/SpotiDownloader.com%20-%20Pelangi%20-%20Hivi!.mp3"
+  },
+  {
+    title: "Rasakan Nikmatnya Hidup",
+    artist: "Hindia",
+    src: "https://raw.githubusercontent.com/redbals359-cyber/mathbase/main/SpotiDownloader.com%20-%20Rasakan%20Nikmatnya%20Hidup%20-%20Hindia.mp3"
+  },
+  {
+    title: "You're On Your Own, Kid",
+    artist: "Taylor Swift",
+    src: "https://raw.githubusercontent.com/redbals359-cyber/mathbase/main/SpotiDownloader.com%20-%20You%27re%20On%20Your%20Own%2C%20Kid%20-%20Taylor%20Swift.mp3"
+  }
+];
+
+const audio = document.getElementById("audioPlayer");
+const playBtn = document.getElementById("playBtn");
+const trackSelect = document.getElementById("trackSelect");
+const trackTitle = document.getElementById("trackTitle");
+const trackArtist = document.getElementById("trackArtist");
+const seekBar = document.getElementById("seekBar");
+const currentTimeLabel = document.getElementById("currentTime");
+const durationLabel = document.getElementById("duration");
+const musicStatus = document.getElementById("musicStatus");
+const shuffleBtn = document.getElementById("shuffleBtn");
+const repeatBtn = document.getElementById("repeatBtn");
+const repeatSelect = document.getElementById("repeatSelect");
+const volumeBar = document.getElementById("volumeBar");
+
+let currentTrack = 0;
+let shuffleMode = false;
+let repeatMode = "all";
+let seeking = false;
+
+audio.volume = 0.5;
+
+function formatTime(seconds) {
+  if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
+
+  const minutes = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+
+  return minutes + ":" + String(secs).padStart(2, "0");
+}
+
+function loadTrack(index, autoplay = false) {
+  currentTrack = (index + tracks.length) % tracks.length;
+
+  const track = tracks[currentTrack];
+
+  audio.src = track.src;
+  audio.load();
+
+  trackTitle.textContent = track.title;
+  trackArtist.textContent = track.artist;
+  trackSelect.value = String(currentTrack);
+
+  seekBar.value = 0;
+  currentTimeLabel.textContent = "0:00";
+  durationLabel.textContent = "0:00";
+
+  musicStatus.textContent =
+    "Lagu dipilih. Tekan Putar untuk mulai mendengarkan.";
+
+  if (autoplay) {
+    playAudio();
+  } else {
+    updatePlayButton();
+  }
+}
+
+async function playAudio() {
+  try {
+    await audio.play();
+    musicStatus.textContent = "Musik sedang diputar.";
+  } catch (error) {
+    musicStatus.textContent =
+      "Lagu belum bisa diputar. Tekan Putar lagi atau periksa apakah file MP3 tersedia.";
+  }
+
+  updatePlayButton();
+}
+
+function updatePlayButton() {
+  playBtn.textContent = audio.paused ? "▶ Putar" : "⏸ Jeda";
+}
+
+function playNextTrack() {
+  if (shuffleMode && tracks.length > 1) {
+    let next;
+
+    do {
+      next = Math.floor(Math.random() * tracks.length);
+    } while (next === currentTrack);
+
+    loadTrack(next, true);
+    return;
+  }
+
+  if (currentTrack === tracks.length - 1 && repeatMode === "off") {
+    audio.pause();
+    audio.currentTime = 0;
+    updatePlayButton();
+    musicStatus.textContent = "Playlist selesai.";
+    return;
+  }
+
+  loadTrack(currentTrack + 1, true);
+}
+
+document.getElementById("prevBtn").addEventListener("click", () => {
+  if (audio.currentTime > 3) {
+    audio.currentTime = 0;
+    return;
+  }
+
+  if (shuffleMode && tracks.length > 1) {
+    let previous;
+
+    do {
+      previous = Math.floor(Math.random() * tracks.length);
+    } while (previous === currentTrack);
+
+    loadTrack(previous, true);
+  } else {
+    loadTrack(currentTrack - 1, true);
+  }
+});
+
+document.getElementById("nextBtn").addEventListener("click", playNextTrack);
+
+playBtn.addEventListener("click", () => {
+  if (audio.paused) {
+    playAudio();
+  } else {
+    audio.pause();
+    updatePlayButton();
+  }
+});
+
+trackSelect.addEventListener("change", () => {
+  loadTrack(Number(trackSelect.value), true);
+});
+
+shuffleBtn.addEventListener("click", () => {
+  shuffleMode = !shuffleMode;
+
+  shuffleBtn.classList.toggle("primary", shuffleMode);
+
+  musicStatus.textContent = shuffleMode
+    ? "Mode acak aktif."
+    : "Mode acak dimatikan.";
+});
+
+repeatSelect.addEventListener("change", () => {
+  repeatMode = repeatSelect.value;
+  updateRepeatButton();
+});
+
+repeatBtn.addEventListener("click", () => {
+  const modes = ["all", "one", "off"];
+  const index = modes.indexOf(repeatMode);
+
+  repeatMode = modes[(index + 1) % modes.length];
+  repeatSelect.value = repeatMode;
+
+  updateRepeatButton();
+});
+
+function updateRepeatButton() {
+  if (repeatMode === "all") {
+    repeatBtn.textContent = "🔁 Semua";
+  } else if (repeatMode === "one") {
+    repeatBtn.textContent = "🔂 Satu";
+  } else {
+    repeatBtn.textContent = "➡ Tidak ulang";
+  }
+
+  repeatBtn.classList.toggle("primary", repeatMode !== "off");
+}
+
+volumeBar.addEventListener("input", () => {
+  audio.volume = Number(volumeBar.value);
+});
+
+audio.addEventListener("loadedmetadata", () => {
+  durationLabel.textContent = formatTime(audio.duration);
+});
+
+audio.addEventListener("timeupdate", () => {
+  if (seeking) return;
+
+  currentTimeLabel.textContent = formatTime(audio.currentTime);
+
+  if (Number.isFinite(audio.duration) && audio.duration > 0) {
+    seekBar.value = (audio.currentTime / audio.duration) * 100;
+  }
+});
+
+seekBar.addEventListener("input", () => {
+  seeking = true;
+
+  if (Number.isFinite(audio.duration) && audio.duration > 0) {
+    currentTimeLabel.textContent = formatTime(
+      (Number(seekBar.value) / 100) * audio.duration
+    );
+  }
+});
+
+seekBar.addEventListener("change", () => {
+  if (Number.isFinite(audio.duration) && audio.duration > 0) {
+    audio.currentTime =
+      (Number(seekBar.value) / 100) * audio.duration;
+  }
+
+  seeking = false;
+});
+
+audio.addEventListener("ended", () => {
+  if (repeatMode === "one") {
+    audio.currentTime = 0;
+    playAudio();
+  } else {
+    playNextTrack();
+  }
+});
+
+audio.addEventListener("error", () => {
+  musicStatus.textContent =
+    "File lagu gagal dimuat. Periksa link Raw GitHub dan nama file MP3.";
+  updatePlayButton();
+});
+
+audio.addEventListener("play", updatePlayButton);
+audio.addEventListener("pause", updatePlayButton);
+
+loadTrack(0);
+
+/* =========================
+   MATHQUEST DATA
+========================= */
+
+const categories = [
+  "Berhitung & Desimal",
+  "Persentase & Perbandingan",
+  "Logika",
+  "Problem Solving"
+];
+
+const categoryStats = {};
+
+categories.forEach(category => {
+  categoryStats[category] = {
+    answered: 0,
+    correct: 0
+  };
+});
+
+let totalAnswered = 0;
+let totalCorrect = 0;
+let totalXP = 0;
+let wrongAnswers = [];
+let questionCount = 0;
+let currentQuestion = null;
+let hasAnswered = false;
+let difficulty = 1;
+
+const questionText = document.getElementById("questionText");
+const answerOptions = document.getElementById("answerOptions");
+const feedback = document.getElementById("feedback");
+const hintBox = document.getElementById("hintBox");
+const explanationBox = document.getElementById("explanationBox");
+const categorySelect = document.getElementById("categorySelect");
+
+function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function shuffleArray(array) {
+  const result = [...array];
+
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = randomInt(0, i);
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+
+  return result;
+}
+
+function formatNumber(number) {
+  return Number(number.toFixed(2)).toLocaleString("id-ID", {
+    maximumFractionDigits: 2
+  });
+}
+
+function createQuestion(category, question, answer, hint, explanation, wrongs) {
+  const correctAnswer = String(answer);
+
+  const choices = shuffleArray([
+    correctAnswer,
+    ...wrongs.map(String).filter(value => value !== correctAnswer)
+  ]).slice(0, 4);
+
+  return {
+    category,
+    question,
+    answer: correctAnswer,
+    hint,
+    explanation,
+    choices: shuffleArray(choices)
+  };
+}
+
+/* =========================
+   QUESTION GENERATORS
+========================= */
+
+function generateArithmetic() {
+  const level = difficulty;
+
+  const a = randomInt(5, 15 * level);
+  const b = randomInt(2, 10 * level);
+  const operation = randomInt(1, 4);
+
+  let question, answer, hint, explanation;
+
+  if (operation === 1) {
+    question = `Hitung hasil dari ${a} + ${b}.`;
+    answer = a + b;
+    hint = "Penjumlahan berarti menggabungkan dua bilangan.";
+    explanation = `${a} + ${b} = ${answer}.`;
+  } else if (operation === 2) {
+    const big = Math.max(a, b);
+    const small = Math.min(a, b);
+
+    question = `Hitung hasil dari ${big} − ${small}.`;
+    answer = big - small;
+    hint = "Kurangkan bilangan yang lebih kecil dari bilangan yang lebih besar.";
+    explanation = `${big} − ${small} = ${answer}.`;
+  } else if (operation === 3) {
+    question = `Hitung hasil dari ${a} × ${b}.`;
+    answer = a * b;
+    hint = "Perkalian dapat dipahami sebagai penjumlahan berulang.";
+    explanation = `${a} × ${b} = ${answer}.`;
+  } else {
+    const divisor = randomInt(2, 10);
+    const quotient = randomInt(2, 12 * level);
+
+    question = `Hitung hasil dari ${divisor * quotient} ÷ ${divisor}.`;
+    answer = quotient;
+    hint = "Cari bilangan yang jika dikalikan dengan pembagi menghasilkan bilangan awal.";
+    explanation = `${divisor * quotient} ÷ ${divisor} = ${answer}.`;
+  }
+
+  const wrongs = [
+    Number(answer) + randomInt(1, 5),
+    Math.max(0, Number(answer) - randomInt(1, 4)),
+    Number(answer) + randomInt(6, 10)
+  ];
+
+  return createQuestion(
+    categories[0], question, answer, hint, explanation, wrongs
+  );
+}
+
+function generatePercent() {
+  const type = randomInt(1, 3);
+
+  if (type === 1) {
+    const base = randomInt(2, 20) * 10;
+    const percent = [10, 20, 25, 30, 50][randomInt(0, 4)];
+    const answer = base * percent / 100;
+
+    return createQuestion(
+      categories[1],
+      `Berapakah ${percent}% dari ${base}?`,
+      answer,
+      `${percent}% berarti ${percent} per 100.`,
+      `${percent}% × ${base} = ${percent}/100 × ${base} = ${formatNumber(answer)}.`,
+      [answer + 5, Math.max(0, answer - 5), answer + 10]
+    );
+  }
+
+  if (type === 2) {
+    const price = randomInt(10, 100) * 1000;
+    const discount = [10, 20, 25, 30, 50][randomInt(0, 4)];
+    const finalPrice = price * (100 - discount) / 100;
+
+    return createQuestion(
+      categories[1],
+      `Sebuah barang berharga Rp${formatNumber(price)} mendapat diskon ${discount}%. Berapa harga setelah diskon?`,
+      finalPrice,
+      `Hitung diskonnya terlebih dahulu, lalu kurangkan dari harga awal.`,
+      `Diskon = ${discount}% × Rp${formatNumber(price)} = Rp${formatNumber(price * discount / 100)}. Harga akhir = Rp${formatNumber(price)} − Rp${formatNumber(price * discount / 100)} = Rp${formatNumber(finalPrice)}.`,
+      [finalPrice + 5000, Math.max(0, finalPrice - 10000), price]
+    );
+  }
+
+  const ratioA = randomInt(1, 5);
+  const ratioB = randomInt(2, 6);
+  const multiplier = randomInt(2, 8);
+  const totalB = ratioB * multiplier;
+
+  return createQuestion(
+    categories[1],
+    `Perbandingan A : B = ${ratioA} : ${ratioB}. Jika nilai B adalah ${totalB}, berapakah nilai A?`,
+    ratioA * multiplier,
+    `Cari pengali dari ${ratioB} agar menjadi ${totalB}.`,
+    `Pengali = ${totalB} ÷ ${ratioB} = ${multiplier}. Maka A = ${ratioA} × ${multiplier} = ${ratioA * multiplier}.`,
+    [
+      ratioA * multiplier + 2,
+      Math.max(1, ratioA * multiplier - 2),
+      totalB + ratioA
+    ]
+  );
+}
+
+function generateLogic() {
+  const start = randomInt(1, 10);
+  const difference = randomInt(2, 5 * difficulty);
+  const length = randomInt(3, 5);
+
+  const sequence = [];
+
+  for (let i = 0; i < length; i++) {
+    sequence.push(start + difference * i);
+  }
+
+  const answer = start + difference * length;
+
+  return createQuestion(
+    categories[2],
+    `Perhatikan pola berikut: ${sequence.join(", ")}, ... Berapa angka selanjutnya?`,
+    answer,
+    "Periksa selisih antara dua angka yang berurutan.",
+    `Setiap angka bertambah ${difference}. Jadi angka berikutnya adalah ${sequence[sequence.length - 1]} + ${difference} = ${answer}.`,
+    [answer + difference, answer - 1, answer + 2]
+  );
+}
+
+function generateProblem() {
+  const type = randomInt(1, 3);
+
+  if (type === 1) {
+    const price = randomInt(2, 10) * 5000;
+    const quantity = randomInt(2, 6);
+    const paid = price * quantity + randomInt(1, 5) * 5000;
+    const change = paid - price * quantity;
+
+    return createQuestion(
+      categories[3],
+      `Seseorang membeli ${quantity} buku seharga Rp${formatNumber(price)} per buku. Ia membayar Rp${formatNumber(paid)}. Berapa uang kembaliannya?`,
+      change,
+      "Hitung total harga semua buku, kemudian kurangkan dari uang yang dibayarkan.",
+      `Total belanja = ${quantity} × Rp${formatNumber(price)} = Rp${formatNumber(price * quantity)}. Kembalian = Rp${formatNumber(paid)} − Rp${formatNumber(price * quantity)} = Rp${formatNumber(change)}.`,
+      [change + 5000, Math.max(0, change - 5000), paid]
+    );
+  }
+
+  if (type === 2) {
+    const distance = randomInt(2, 10) * 10;
+    const hours = randomInt(2, 5);
+    const speed = distance / hours;
+
+    return createQuestion(
+      categories[3],
+      `Sebuah kendaraan menempuh jarak ${distance} km dalam ${hours} jam. Berapa kecepatan rata-ratanya?`,
+      speed,
+      "Kecepatan rata-rata = jarak ÷ waktu.",
+      `Kecepatan = ${distance} ÷ ${hours} = ${formatNumber(speed)} km/jam.`,
+      [speed + 5, Math.max(1, speed - 5), distance * hours]
+    );
+  }
+
+  const daily = randomInt(5, 20) * 1000;
+  const days = randomInt(3, 10);
+  const target = daily * days + daily * randomInt(2, 5);
+  const remaining = target - daily * days;
+
+  return createQuestion(
+    categories[3],
+    `Seseorang menabung Rp${formatNumber(daily)} per hari selama ${days} hari. Berapa tambahan uang yang diperlukan untuk mencapai target Rp${formatNumber(target)}?`,
+    remaining,
+    "Hitung jumlah tabungan selama beberapa hari, lalu cari selisih terhadap target.",
+    `Tabungan = Rp${formatNumber(daily)} × ${days} = Rp${formatNumber(daily * days)}. Kekurangan = Rp${formatNumber(target)} − Rp${formatNumber(daily * days)} = Rp${formatNumber(remaining)}.`,
+    [remaining + daily, Math.max(0, remaining - daily), target]
+  );
+}
+
+function generateQuestion() {
+  const category = categorySelect.value;
+
+  if (category === categories[0]) return generateArithmetic();
+  if (category === categories[1]) return generatePercent();
+  if (category === categories[2]) return generateLogic();
+
+  return generateProblem();
+}
+
+/* =========================
+   QUIZ FLOW
+========================= */
+
+function startQuestion() {
+  currentQuestion = generateQuestion();
+  hasAnswered = false;
+  questionCount++;
+
+  document.getElementById("categoryLabel").textContent = currentQuestion.category;
+  document.getElementById("difficultyLabel").textContent = difficulty;
+  document.getElementById("questionNumber").textContent = questionCount;
+
+  questionText.textContent = currentQuestion.question;
+  answerOptions.innerHTML = "";
+
+  feedback.className = "feedback";
+  feedback.textContent = "";
+
+  hintBox.className = "feedback";
+  hintBox.textContent = "";
+
+  explanationBox.className = "feedback";
+  explanationBox.textContent = "";
+
+  currentQuestion.choices.forEach(choice => {
+    const button = document.createElement("button");
+
+    button.className = "option-btn";
+    button.textContent = choice;
+    button.addEventListener("click", () => answerQuestion(choice, button));
+
+    answerOptions.appendChild(button);
+  });
+
+  // Papan coret tetap tersedia untuk soal berikutnya.
+}
+
+function answerQuestion(choice, clickedButton) {
+  if (hasAnswered || !currentQuestion) return;
+
+  hasAnswered = true;
+  totalAnswered++;
+
+  const isCorrect = String(choice) === String(currentQuestion.answer);
+
+  categoryStats[currentQuestion.category].answered++;
+
+  if (isCorrect) {
+    totalCorrect++;
+    totalXP += 10 * difficulty;
+    categoryStats[currentQuestion.category].correct++;
+
+    feedback.className = "feedback show good";
+    feedback.textContent =
+      `Benar! 🎉 Kamu mendapatkan ${10 * difficulty} XP.`;
+  } else {
+    totalXP += 2;
+
+    feedback.className = "feedback show bad";
+    feedback.textContent =
+      `Belum tepat. Jawaban yang benar adalah ${currentQuestion.answer}. Baca pembahasan untuk memahami caranya.`;
+
+    wrongAnswers.unshift({
+      category: currentQuestion.category,
+      question: currentQuestion.question,
+      userAnswer: String(choice),
+      correctAnswer: currentQuestion.answer,
+      explanation: currentQuestion.explanation
+    });
+  }
+
+  document.querySelectorAll(".option-btn").forEach(button => {
+    button.disabled = true;
+
+    if (String(button.textContent) === String(currentQuestion.answer)) {
+      button.classList.add("correct");
+    }
+  });
+
+  if (!isCorrect) {
+    clickedButton.classList.add("wrong");
+  }
+
+  // Tingkat naik setiap 5 soal yang sudah dijawab.
+  difficulty = Math.floor(totalAnswered / 5) + 1;
+
+  updateDashboard();
+}
+
+document.getElementById("newQuestionBtn").addEventListener("click", startQuestion);
+
+document.getElementById("hintBtn").addEventListener("click", () => {
+  if (!currentQuestion) {
+    hintBox.textContent = "Mulai latihan untuk mendapatkan petunjuk.";
+  } else {
+    hintBox.textContent = "💡 " + currentQuestion.hint;
+  }
+
+  hintBox.className = "feedback show";
+});
+
+document.getElementById("explanationBtn").addEventListener("click", () => {
+  if (!currentQuestion) {
+    explanationBox.textContent = "Mulai latihan untuk melihat pembahasan.";
+  } else {
+    explanationBox.textContent = "📖 " + currentQuestion.explanation;
+  }
+
+  explanationBox.className = "feedback show";
+});
+
+categorySelect.addEventListener("change", () => {
+  if (currentQuestion) {
+    startQuestion();
+  }
+});
+
+/* =========================
+   PAGE NAVIGATION
+========================= */
+
+const pageTitles = {
+  home: "Beranda",
+  practice: "Latihan",
+  evaluation: "Evaluasi",
+  progress: "Progres"
+};
+
+function showPage(pageName) {
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.toggle("active", page.id === pageName);
+  });
+
+  document.querySelectorAll(".nav-btn").forEach(button => {
+    button.classList.toggle("active", button.dataset.page === pageName);
+  });
+
+  document.getElementById("pageTitle").textContent = pageTitles[pageName];
+
+  if (pageName === "evaluation" || pageName === "progress") {
+    updateDashboard();
+  }
+
+  if (pageName === "practice") {
+    resizeScratchCanvas();
+  }
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.querySelectorAll(".nav-btn").forEach(button => {
+  button.addEventListener("click", () => showPage(button.dataset.page));
+});
+
+document.getElementById("startBtn").addEventListener("click", () => {
+  showPage("practice");
+  if (!currentQuestion) startQuestion();
+});
+
+document.querySelectorAll(".category-start").forEach(button => {
+  button.addEventListener("click", () => {
+    categorySelect.value = button.dataset.category;
+    showPage("practice");
+    startQuestion();
+  });
+});
+
+/* =========================
+   DASHBOARD / EVALUATION
+========================= */
+
+function updateDashboard() {
+  const level = Math.floor(totalXP / 100) + 1;
+  const accuracy = totalAnswered
+    ? Math.round(totalCorrect / totalAnswered * 100)
+    : 0;
+
+  document.getElementById("levelTop").textContent = level;
+  document.getElementById("xpTop").textContent = totalXP;
+
+  document.getElementById("homeXP").textContent = totalXP;
+  document.getElementById("homeCorrect").textContent = totalCorrect;
+  document.getElementById("homeAnswered").textContent = totalAnswered;
+
+  document.getElementById("evalAnswered").textContent = totalAnswered;
+  document.getElementById("evalCorrect").textContent = totalCorrect;
+  document.getElementById("evalAccuracy").textContent = accuracy + "%";
+
+  document.getElementById("progressXP").textContent = totalXP;
+  document.getElementById("progressLevel").textContent = level;
+  document.getElementById("progressAccuracy").textContent = accuracy + "%";
+
+  renderWrongAnswers();
+  renderRecommendation();
+  renderCategoryProgress();
+}
+
+function renderWrongAnswers() {
+  const container = document.getElementById("wrongAnswers");
+
+  if (!wrongAnswers.length) {
+    container.innerHTML =
+      '<div class="empty-state">Belum ada jawaban salah. Terus berlatih!</div>';
+    return;
+  }
+
+  container.innerHTML = "";
+
+  wrongAnswers.forEach((item, index) => {
+    const div = document.createElement("div");
+    div.className = "review-item";
+
+    const heading = document.createElement("h4");
+    heading.textContent = `${index + 1}. ${item.category}`;
+
+    const question = document.createElement("div");
+    question.textContent = item.question;
+
+    const wrong = document.createElement("div");
+    wrong.className = "answer-wrong";
+    wrong.textContent = "Jawabanmu: " + item.userAnswer;
+
+    const correct = document.createElement("div");
+    correct.className = "answer-right";
+    correct.textContent = "Jawaban benar: " + item.correctAnswer;
+
+    const explanation = document.createElement("div");
+    explanation.textContent = "Pembahasan: " + item.explanation;
+
+    div.append(heading, question, wrong, correct, explanation);
+    container.appendChild(div);
+  });
+}
+
+function renderRecommendation() {
+  const recommendation = document.getElementById("recommendation");
+
+  if (!totalAnswered) {
+    recommendation.textContent =
+      "Kerjakan beberapa soal terlebih dahulu agar rekomendasi belajarmu bisa ditampilkan.";
+    recommendation.className = "empty-state";
+    return;
+  }
+
+  const sorted = categories
+    .map(category => {
+      const stats = categoryStats[category];
+
+      const accuracy = stats.answered
+        ? stats.correct / stats.answered
+        : -1;
+
+      return { category, ...stats, accuracy };
+    })
+    .filter(item => item.answered > 0)
+    .sort((a, b) => a.accuracy - b.accuracy);
+
+  if (!sorted.length) {
+    recommendation.textContent =
+      "Kerjakan soal dalam kategori apa pun untuk mendapatkan rekomendasi.";
+    recommendation.className = "empty-state";
+    return;
+  }
+
+  const weakest = sorted[0];
+
+  recommendation.className = "review-item";
+  recommendation.textContent =
+    `Fokus belajar berikutnya: ${weakest.category}. ` +
+    `Kamu menjawab benar ${weakest.correct} dari ${weakest.answered} soal ` +
+    `di kategori ini. Coba pelajari kembali konsep dasarnya, lalu berlatih lagi.`;
+}
+
+function renderCategoryProgress() {
+  const container = document.getElementById("categoryProgress");
+  container.innerHTML = "";
+
+  categories.forEach(category => {
+    const stats = categoryStats[category];
+
+    const accuracy = stats.answered
+      ? Math.round(stats.correct / stats.answered * 100)
+      : 0;
+
+    const row = document.createElement("div");
+    row.className = "progress-row";
+
+    const info = document.createElement("div");
+    info.className = "progress-info";
+
+    const name = document.createElement("span");
+    name.textContent = category;
+
+    const result = document.createElement("span");
+    result.textContent = `${stats.correct}/${stats.answered} benar · ${accuracy}%`;
+
+    info.append(name, result);
+
+    const bar = document.createElement("div");
+    bar.className = "progress-bar";
+
+    const fill = document.createElement("div");
+    fill.className = "progress-fill";
+    fill.style.width = accuracy + "%";
+
+    bar.appendChild(fill);
+    row.append(info, bar);
+    container.appendChild(row);
+  });
+}
+
+/* =========================
+   LARGE SCRATCHPAD CANVAS
+========================= */
+
+const canvas = document.getElementById("scratchCanvas");
+const ctx = canvas.getContext("2d");
+const scratchWrap = document.getElementById("scratchWrap");
+
+let drawing = false;
+let currentTool = "pen";
+let penColor = "#332d55";
+let penSize = 4;
+let lastX = 0;
+let lastY = 0;
+let undoStack = [];
+let canvasReady = false;
+
+function saveCanvasState() {
+  if (!canvas.width || !canvas.height) return;
+
+  try {
+    undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+
+    if (undoStack.length > 20) {
+      undoStack.shift();
+    }
+  } catch (error) {
+    // Jika browser membatasi canvas, proses menggambar tetap berjalan.
+  }
+}
+
+function resizeScratchCanvas() {
+  const rect = scratchWrap.getBoundingClientRect();
+
+  if (rect.width <= 0 || rect.height <= 0) return;
+
+  let oldImage = null;
+
+  if (canvasReady && canvas.width && canvas.height) {
+    oldImage = document.createElement("canvas");
+    oldImage.width = canvas.width;
+    oldImage.height = canvas.height;
+    oldImage.getContext("2d").drawImage(canvas, 0, 0);
+  }
+
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+
+  canvas.width = Math.round(rect.width * dpr);
+  canvas.height = Math.round(rect.height * dpr);
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+
+  if (oldImage) {
+    ctx.drawImage(
+      oldImage,
+      0, 0, oldImage.width, oldImage.height,
+      0, 0, rect.width, rect.height
+    );
+  }
+
+  canvasReady = true;
+}
+
+function getCanvasPosition(event) {
+  const rect = canvas.getBoundingClientRect();
+
+  return {
+    x: event.clientX - rect.left,
+    y: event.clientY - rect.top
+  };
+}
+
+canvas.addEventListener("pointerdown", event => {
+  event.preventDefault();
+
+  if (!canvasReady) resizeScratchCanvas();
+
+  saveCanvasState();
+
+  drawing = true;
+  canvas.setPointerCapture(event.pointerId);
+
+  const pos = getCanvasPosition(event);
+
+  lastX = pos.x;
+  lastY = pos.y;
+
+  ctx.beginPath();
+  ctx.arc(lastX, lastY, currentTool === "eraser" ? penSize * 2 : penSize / 2, 0, Math.PI * 2);
+
+  if (currentTool === "eraser") {
+    ctx.fillStyle = "#ffffff";
+  } else {
+    ctx.fillStyle = penColor;
+  }
+
+  ctx.fill();
+});
+
+canvas.addEventListener("pointermove", event => {
+  if (!drawing) return;
+
+  event.preventDefault();
+
+  const pos = getCanvasPosition(event);
+
+  ctx.beginPath();
+  ctx.moveTo(lastX, lastY);
+  ctx.lineTo(pos.x, pos.y);
+
+  ctx.lineWidth = currentTool === "eraser" ? penSize * 4 : penSize;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+
+  if (currentTool === "eraser") {
+    ctx.strokeStyle = "#ffffff";
+  } else {
+    ctx.strokeStyle = penColor;
+  }
+
+  ctx.stroke();
+
+  lastX = pos.x;
+  lastY = pos.y;
+});
+
+function stopDrawing() {
+  drawing = false;
+}
+
+canvas.addEventListener("pointerup", stopDrawing);
+canvas.addEventListener("pointercancel", stopDrawing);
+canvas.addEventListener("lostpointercapture", stopDrawing);
+
+document.getElementById("penBtn").addEventListener("click", () => {
+  currentTool = "pen";
+
+  document.getElementById("penBtn").classList.add("active");
+  document.getElementById("eraserBtn").classList.remove("active");
+});
+
+document.getElementById("eraserBtn").addEventListener("click", () => {
+  currentTool = "eraser";
+
+  document.getElementById("eraserBtn").classList.add("active");
+  document.getElementById("penBtn").classList.remove("active");
+});
+
+document.getElementById("penColor").addEventListener("input", event => {
+  penColor = event.target.value;
+});
+
+document.getElementById("penSize").addEventListener("change", event => {
+  penSize = Number(event.target.value);
+});
+
+document.getElementById("undoBtn").addEventListener("click", () => {
+  if (!undoStack.length) return;
+
+  const previousState = undoStack.pop();
+  ctx.putImageData(previousState, 0, 0);
+});
+
+document.getElementById("clearBtn").addEventListener("click", () => {
+  if (!confirm("Hapus semua coretan di papan?")) return;
+
+  undoStack = [];
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+});
+
+// Pertahankan coretan saat orientasi atau ukuran layar berubah.
+let resizeTimer;
+
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+
+  resizeTimer = setTimeout(() => {
+    resizeScratchCanvas();
+  }, 150);
+});
+
+if ("ResizeObserver" in window) {
+  const observer = new ResizeObserver(() => {
+    if (!canvasReady) resizeScratchCanvas();
+  });
+
+  observer.observe(scratchWrap);
+}
+
+/* =========================
+   INITIALIZATION
+========================= */
+
+resizeScratchCanvas();
+updateDashboard();
+startQuestion();
+</script>
+</body>
+</html>
